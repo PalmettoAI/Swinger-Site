@@ -1,0 +1,56 @@
+<section class="page">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Membership</span>
+      <h1 class="mt-2">Choose your experience</h1>
+      <p>Free to join. Upgrade to Gold anytime for the full <%= brand.name %>.</p>
+    </div>
+
+    <% if (upgrade) { %>
+      <div class="flash flash-success" style="max-width:880px;margin:0 auto var(--sp-4)">Unlock this feature and much more with Gold.</div>
+    <% } %>
+
+    <div class="cycle-toggle">
+      <label class="chip on"><input type="radio" name="cycle" value="monthly" data-cycle checked /> Monthly</label>
+      <label class="chip"><input type="radio" name="cycle" value="annual" data-cycle /> Annual · save 25%</label>
+    </div>
+
+    <div class="plan-grid">
+      <div class="card plan">
+        <span class="eyebrow"><%= tiers.free.label %></span>
+        <div class="price">$0</div>
+        <p class="muted"><%= tiers.free.blurb %></p>
+        <ul>
+          <% tiers.free.features.forEach(function(f){ %><li><%= f %></li><% }) %>
+        </ul>
+        <% if (currentUser.membership === 'free') { %>
+          <span class="btn btn-ghost" style="pointer-events:none">Your current plan</span>
+        <% } else { %>
+          <form action="/membership/cancel" method="post"><button class="btn btn-ghost btn-block" type="submit">Downgrade</button></form>
+        <% } %>
+      </div>
+
+      <div class="card plan featured">
+        <span class="eyebrow text-gold"><%= tiers.gold.label %></span>
+        <div class="price">$<span data-price data-monthly="<%= tiers.gold.priceMonthly %>" data-annual="<%= Math.round(tiers.gold.priceAnnual/12) %>"><%= tiers.gold.priceMonthly %></span><small>/mo</small></div>
+        <p class="muted"><%= tiers.gold.blurb %></p>
+        <ul>
+          <% tiers.gold.features.forEach(function(f){ %><li><%= f %></li><% }) %>
+        </ul>
+        <% if (currentUser.membership === 'gold') { %>
+          <span class="btn btn-gold" style="pointer-events:none">You're Gold ✦</span>
+        <% } else { %>
+          <form action="/membership/upgrade" method="post">
+            <input type="hidden" name="cycle" value="monthly" data-cycle-input />
+            <button class="btn btn-gold btn-block" type="submit">Upgrade to Gold</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+
+    <p class="text-sm muted center mt-5" style="max-width:60ch;margin-inline:auto">
+      Billing is processed securely by our adult-industry payment partner. Cancel anytime.
+      Charges appear on your statement under a discreet descriptor.
+    </p>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+<section class="page">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Membership</span>
+      <h1 class="mt-2">Simple, honest pricing</h1>
+      <p>Join free. Upgrade only when you want more.</p>
+    </div>
+
+    <div class="plan-grid">
+      <div class="card plan">
+        <span class="eyebrow"><%= tiers.free.label %></span>
+        <div class="price">$0</div>
+        <p class="muted"><%= tiers.free.blurb %></p>
+        <ul><% tiers.free.features.forEach(function(f){ %><li><%= f %></li><% }) %></ul>
+        <a href="/enter" class="btn btn-ghost btn-block">Create free profile</a>
+      </div>
+      <div class="card plan featured">
+        <span class="eyebrow text-gold"><%= tiers.gold.label %></span>
+        <div class="price">$<%= tiers.gold.priceMonthly %><small>/mo</small></div>
+        <p class="muted"><%= tiers.gold.blurb %></p>
+        <ul><% tiers.gold.features.forEach(function(f){ %><li><%= f %></li><% }) %></ul>
+        <a href="/enter" class="btn btn-gold btn-block">Get started</a>
+      </div>
+    </div>
+  </div>
+</section>

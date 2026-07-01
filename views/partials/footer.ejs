@@ -1,0 +1,25 @@
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand-mark" style="font-size:1.2rem">
+          <span class="seal"><%= brand.name.charAt(0) %></span> <%= brand.name %>
+        </div>
+        <p class="text-sm muted mt-2"><%= brand.tagline %></p>
+      </div>
+      <nav class="footer-links">
+        <a href="/about">About</a>
+        <a href="/pricing">Membership</a>
+        <a href="/safety">Safety &amp; Consent</a>
+        <a href="/guidelines">Guidelines</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </nav>
+    </div>
+    <p class="footer-legal">
+      <%= brand.name %> is a social platform for consenting adults (18+) in the lifestyle community.
+      All members verify they are of legal age. &copy; <span data-year>2026</span> <%= brand.legalName %>.
+      This site contains adult-oriented material intended for mature audiences only.
+    </p>
+  </div>
+</footer>

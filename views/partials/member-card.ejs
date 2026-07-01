@@ -1,0 +1,34 @@
+<%
+  // expects: m (member row). Optional: showActions (bool)
+  var initials = (m.display_name || '?').split(' ').map(function(s){return s.charAt(0)}).join('').slice(0,2).toUpperCase();
+  var online = m.last_active && (Date.now() - new Date(m.last_active).getTime() < 15*60*1000);
+%>
+<article class="member-card">
+  <a href="/profile/<%= m.id %>" class="member-photo">
+    <div class="badges">
+      <% if (m.membership === 'gold') { %><span class="pill pill-gold">Gold</span><% } %>
+      <% if (online) { %><span class="pill pill-online">Online</span><% } %>
+    </div>
+    <% if (m.photo) { %>
+      <img src="/uploads/<%= m.photo %>" alt="<%= h.escapeHtml(m.display_name) %>" loading="lazy" />
+    <% } else { %>
+      <div class="placeholder"><%= initials %></div>
+    <% } %>
+  </a>
+  <% if (typeof showActions === 'undefined' || showActions) { %>
+    <div class="card-actions">
+      <form action="/matches/pass/<%= m.id %>" method="post"><button class="qa qa-pass" title="Pass" type="submit">✕</button></form>
+      <form action="/matches/like/<%= m.id %>" method="post"><button class="qa qa-like" title="Like" type="submit">♥</button></form>
+    </div>
+  <% } %>
+  <a href="/profile/<%= m.id %>" class="meta" style="display:block">
+    <div class="name">
+      <%= m.display_name %>
+    </div>
+    <div class="sub">
+      <%= h.ACCOUNT_TYPES[m.account_type] || '' %>
+      <% if (m.city) { %> · <%= m.city %>, <%= m.state %><% } %>
+      <% if (typeof m.distance !== 'undefined' && m.distance !== null) { %> · <%= m.distance %> mi<% } %>
+    </div>
+  </a>
+</article>

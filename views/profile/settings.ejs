@@ -1,0 +1,51 @@
+<section class="page">
+  <div class="wrap narrow">
+    <h1 class="page-title">Account settings</h1>
+    <p class="page-lead"><%= currentUser.email %> · <%= accountTypes[currentUser.account_type] %></p>
+
+    <% if (error) { %><div class="flash flash-error"><%= error %></div><% } %>
+    <% if (success) { %><div class="flash flash-success"><%= success %></div><% } %>
+
+    <div class="card card-pad mb-4">
+      <h3 class="mb-3">Membership</h3>
+      <div class="row between wrap-gap">
+        <div>
+          <strong class="serif" style="font-size:1.4rem;color:var(--gold-hi)"><%= currentUser.membership === 'gold' ? 'Gold' : 'Free' %></strong>
+          <% if (currentUser.membership === 'gold' && currentUser.membership_expires) { %>
+            <p class="text-sm muted">Renews / expires <%= new Date(currentUser.membership_expires).toLocaleDateString() %></p>
+          <% } %>
+        </div>
+        <% if (currentUser.membership === 'gold') { %>
+          <form action="/membership/cancel" method="post" onsubmit="return confirm('Cancel Gold and return to the Free plan?')">
+            <button class="btn btn-ghost btn-sm" type="submit">Cancel membership</button>
+          </form>
+        <% } else { %>
+          <a href="/membership" class="btn btn-gold btn-sm">Upgrade to Gold</a>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="card card-pad mb-4">
+      <h3 class="mb-3">Change password</h3>
+      <form action="/profile/settings/password" method="post">
+        <div class="field">
+          <label for="current">Current password</label>
+          <input type="password" name="current" id="current" required autocomplete="current-password" />
+        </div>
+        <div class="field">
+          <label for="next">New password</label>
+          <input type="password" name="next" id="next" required minlength="8" autocomplete="new-password" />
+        </div>
+        <button class="btn btn-primary" type="submit">Update password</button>
+      </form>
+    </div>
+
+    <div class="card card-pad">
+      <h3 class="mb-2">Deactivate account</h3>
+      <p class="muted text-sm mb-3">Your profile will be hidden and you'll be signed out. Contact <%= brand.supportEmail %> to reactivate.</p>
+      <form action="/profile/settings/deactivate" method="post" onsubmit="return confirm('Deactivate your account?')">
+        <button class="btn btn-ghost" type="submit">Deactivate</button>
+      </form>
+    </div>
+  </div>
+</section>

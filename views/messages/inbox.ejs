@@ -1,0 +1,32 @@
+<section class="page">
+  <div class="wrap">
+    <h1 class="page-title">Messages</h1>
+    <p class="page-lead">Your conversations.</p>
+
+    <% if (convos.length === 0) { %>
+      <div class="empty-state">
+        <div class="big">💬</div>
+        <h3>No conversations yet</h3>
+        <p>Message a match, or start one from any member's profile.</p>
+        <a href="/browse" class="btn btn-primary mt-3">Browse members</a>
+      </div>
+    <% } else { %>
+      <div class="convo-list" style="max-width:640px">
+        <% convos.forEach(function(c){ %>
+          <a href="/messages/<%= c.id %>" class="convo-item">
+            <% if (c.photo) { %><img class="avatar" src="/uploads/<%= c.photo %>" alt="" />
+            <% } else { %><div class="avatar"><%= (c.display_name||'?').charAt(0).toUpperCase() %></div><% } %>
+            <div style="flex:1;min-width:0">
+              <div class="row between">
+                <span class="c-name"><%= c.display_name %></span>
+                <span class="text-sm muted"><%= h.timeAgo(c.last_at) %></span>
+              </div>
+              <div class="c-last"><%= c.last_body || 'Say hello…' %></div>
+            </div>
+            <% if (Number(c.unread) > 0) { %><span class="nav-badge"><%= c.unread %></span><% } %>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>

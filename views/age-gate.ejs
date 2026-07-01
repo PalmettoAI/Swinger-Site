@@ -1,0 +1,23 @@
+<div class="gate-wrap">
+  <div class="gate-card card rise">
+    <div class="seal-lg"><%= brand.name.charAt(0) %></div>
+    <span class="eyebrow">Age verification</span>
+    <h1 style="font-size:2.4rem; margin:.5rem 0"><%= brand.name %></h1>
+    <p class="muted">
+      This is an adult community for the lifestyle. You must be at least
+      <strong>18 years old</strong> (or the age of majority where you live) to enter.
+      By continuing you confirm you are a consenting adult and agree to our
+      <a href="/terms" class="text-gold">Terms</a> and
+      <a href="/privacy" class="text-gold">Privacy Policy</a>.
+    </p>
+    <form action="/enter" method="post" class="gate-actions">
+      <input type="hidden" name="next" value="<%= next %>" />
+      <input type="hidden" name="confirm" value="yes" />
+      <button class="btn btn-primary btn-block" type="submit">I am 18 or older — Enter</button>
+    </form>
+    <form action="/enter" method="post" class="mt-2">
+      <input type="hidden" name="confirm" value="no" />
+      <button class="btn btn-ghost btn-block" type="submit">Leave</button>
+    </form>
+  </div>
+</div>

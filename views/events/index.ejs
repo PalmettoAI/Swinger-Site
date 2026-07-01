@@ -1,0 +1,62 @@
+<%
+  function dparts(d){ var x=new Date(d); return { d:x.getDate(), m:x.toLocaleDateString('en-US',{month:'short'}) }; }
+%>
+<section class="page">
+  <div class="wrap">
+    <div class="row between wrap-gap mb-3">
+      <div>
+        <h1 class="page-title">Events &amp; clubs</h1>
+        <p class="page-lead">House parties, lifestyle clubs, meet-and-greets and takeovers.</p>
+      </div>
+      <% if (currentUser.membership === 'gold') { %>
+        <a href="/events/new" class="btn btn-primary btn-sm">Host an event</a>
+      <% } else { %>
+        <a href="/membership" class="btn btn-gold btn-sm">Go Gold to host</a>
+      <% } %>
+    </div>
+
+    <form method="get" action="/events" class="filter-bar">
+      <div class="field">
+        <label for="type">Type</label>
+        <select name="type" id="type">
+          <option value="">All types</option>
+          <% Object.keys(eventTypes).forEach(function(k){ %><option value="<%= k %>" <%= filters.type===k?'selected':'' %>><%= eventTypes[k] %></option><% }) %>
+        </select>
+      </div>
+      <div class="field">
+        <label for="state">State</label>
+        <input type="text" name="state" id="state" maxlength="2" value="<%= filters.state %>" placeholder="e.g. SC" style="text-transform:uppercase" />
+      </div>
+      <button class="btn btn-primary btn-sm" type="submit">Filter</button>
+      <a href="/events" class="btn btn-ghost btn-sm">Reset</a>
+    </form>
+
+    <% if (events.length === 0) { %>
+      <div class="empty-state">
+        <div class="big">🥂</div>
+        <h3>No upcoming events here yet</h3>
+        <p>Be the first to bring the community together<% if (currentUser.membership==='gold') { %> — <a href="/events/new" class="text-gold">host one</a><% } %>.</p>
+      </div>
+    <% } else { %>
+      <div class="event-grid">
+        <% events.forEach(function(e){ var dp=dparts(e.starts_at); %>
+          <a href="/events/<%= e.slug %>" class="card event-card">
+            <div class="ecover">
+              <div class="date-chip"><div class="d"><%= dp.d %></div><div class="m"><%= dp.m %></div></div>
+              <%= e.title.charAt(0) %>
+            </div>
+            <div class="event-body">
+              <div class="etype"><%= eventTypes[e.event_type] %></div>
+              <h3><%= e.title %></h3>
+              <div class="event-meta">
+                <span><%= h.formatEventDate(e.starts_at) %></span>
+                <% if (e.city) { %><span>· <%= e.city %><% if(e.state){%>, <%= e.state %><%}%></span><% } %>
+              </div>
+              <p class="text-sm muted mt-2"><%= Number(e.going) %> going</p>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>

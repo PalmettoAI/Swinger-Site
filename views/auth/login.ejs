@@ -1,0 +1,26 @@
+<section class="page">
+  <div class="wrap narrow">
+    <div class="card card-pad rise" style="max-width:460px;margin:0 auto">
+      <span class="eyebrow">Welcome back</span>
+      <h1 class="mt-2 mb-4">Sign in</h1>
+
+      <% if (error) { %><div class="alert-inline"><%= error %></div><% } %>
+
+      <form action="/login" method="post">
+        <input type="hidden" name="next" value="<%= next || '' %>" />
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" value="<%= values.email || '' %>" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" required autocomplete="current-password" />
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+      <p class="text-sm muted mt-3 center">
+        New here? <a href="/enter" class="text-gold">Create a free profile</a>
+      </p>
+    </div>
+  </div>
+</section>

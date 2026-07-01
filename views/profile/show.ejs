@@ -1,0 +1,139 @@
+<%
+  var canPrivate = isOwn || canSeePrivate;
+  var visible = photos.filter(function(p){ return !p.is_private || canPrivate; });
+  var lockedCount = photos.filter(function(p){ return p.is_private && !canPrivate; }).length;
+  var primary = visible.find(function(p){ return p.is_primary; }) || visible[0] || null;
+  var initials = (profile.display_name || '?').split(' ').map(function(s){return s.charAt(0)}).join('').slice(0,2).toUpperCase();
+  var online = user.last_active && (Date.now() - new Date(user.last_active).getTime() < 15*60*1000);
+%>
+<section class="page">
+  <div class="wrap">
+    <div class="profile-hero">
+      <%# ── Gallery ── %>
+      <div class="rise">
+        <div class="gallery-main <%= primary ? '' : 'locked' %>">
+          <% if (primary) { %>
+            <img src="/uploads/<%= primary.filename %>" alt="<%= h.escapeHtml(profile.display_name) %>" data-gallery-main />
+          <% } else if (lockedCount > 0) { %>
+            <div class="lock-overlay" style="position:static;height:100%">
+              <div>
+                <div class="lock-ic">🔒</div>
+                <strong><%= lockedCount %> private photo<%= lockedCount>1?'s':'' %></strong>
+                <small>Request access to view</small>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="placeholder" style="display:grid;place-items:center;height:100%;font-family:var(--serif);font-size:4rem;color:var(--border-hi)"><%= initials %></div>
+          <% } %>
+        </div>
+
+        <% if (visible.length > 1 || lockedCount > 0) { %>
+          <div class="thumbs">
+            <% visible.forEach(function(p){ %>
+              <div class="thumb" data-thumb data-full="/uploads/<%= p.filename %>">
+                <img src="/uploads/<%= p.filename %>" alt="" loading="lazy" />
+              </div>
+            <% }) %>
+            <% for (var i=0; i<lockedCount; i++) { %>
+              <div class="thumb locked"><div class="lock-overlay"><div class="lock-ic" style="width:26px;height:26px;font-size:.8rem;margin:0">🔒</div></div></div>
+            <% } %>
+          </div>
+        <% } %>
+
+        <% if (!isOwn && lockedCount > 0) { %>
+          <div class="panel mt-3" style="padding:var(--sp-3)">
+            <strong class="serif" style="font-size:1.2rem">🔒 <%= lockedCount %> private photo<%= lockedCount>1?'s':'' %></strong>
+            <% if (accessStatus === 'requested') { %>
+              <p class="muted text-sm mt-2">Your request is pending their approval.</p>
+            <% } else if (accessStatus === 'denied') { %>
+              <p class="muted text-sm mt-2">Your request was declined.</p>
+            <% } else { %>
+              <p class="muted text-sm mt-2">Ask <%= profile.display_name %> to unlock their private gallery for you.</p>
+              <form action="/photos/access/<%= user.id %>/request" method="post" class="mt-2">
+                <button class="btn btn-gold btn-sm btn-block" type="submit">Request access</button>
+              </form>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+
+      <%# ── Details ── %>
+      <div class="profile-head rise rise-2">
+        <h1>
+          <%= profile.display_name %>
+          <% if (user.membership === 'gold') { %><span class="pill pill-gold">Gold</span><% } %>
+          <% if (mutual) { %><span class="pill" style="color:var(--rose)">♥ Matched</span><% } %>
+        </h1>
+        <div class="sub">
+          <%= h.ACCOUNT_TYPES[user.account_type] %>
+          <% if (profile.city) { %> · <%= profile.city %>, <%= profile.state %><% } %>
+          <% if (distance !== null && typeof distance !== 'undefined') { %> · <%= distance %> miles away<% } %>
+          <% if (online) { %> · <span class="online-dot">● Online now</span><% } else if (user.last_active) { %> · Active <%= h.timeAgo(user.last_active) %><% } %>
+        </div>
+
+        <% if (profile.headline) { %>
+          <p class="mt-3 serif" style="font-size:1.4rem;color:var(--rose)"><em><%= profile.headline %></em></p>
+        <% } %>
+
+        <% if (!isOwn) { %>
+          <div class="profile-actions">
+            <form action="/matches/like/<%= user.id %>" method="post">
+              <button class="btn <%= liked ? 'btn-ghost' : 'btn-primary' %>" type="submit"<%= liked ? ' disabled' : '' %>>
+                <%= liked ? '♥ Liked' : '♥ Like' %>
+              </button>
+            </form>
+            <a href="/messages/new/<%= user.id %>" class="btn btn-gold">💬 Message</a>
+            <details style="position:relative">
+              <summary class="btn btn-ghost" style="list-style:none">⋯</summary>
+              <div class="card card-pad" style="position:absolute;right:0;z-index:20;min-width:200px;margin-top:.4rem">
+                <form action="/profile/<%= user.id %>/block" method="post" class="mb-2">
+                  <button class="btn btn-ghost btn-sm btn-block" type="submit">Block member</button>
+                </form>
+                <form action="/profile/<%= user.id %>/report" method="post">
+                  <input type="hidden" name="reason" value="inappropriate" />
+                  <button class="btn btn-ghost btn-sm btn-block" type="submit">Report</button>
+                </form>
+              </div>
+            </details>
+          </div>
+        <% } else { %>
+          <div class="profile-actions">
+            <a href="/profile/edit" class="btn btn-primary">Edit profile</a>
+            <a href="/profile/photos" class="btn btn-ghost">Manage photos</a>
+          </div>
+        <% } %>
+
+        <dl class="def-list">
+          <% if (profile.p1_age || profile.p1_gender) { %>
+            <dt><%= (user.account_type==='couple'||user.account_type==='group') ? 'Partner 1' : 'You' %></dt>
+            <dd><%= [profile.p1_age, profile.p1_gender, profile.p1_orientation].filter(Boolean).join(' · ') %></dd>
+          <% } %>
+          <% if (profile.p2_age || profile.p2_gender) { %>
+            <dt>Partner 2</dt>
+            <dd><%= [profile.p2_age, profile.p2_gender, profile.p2_orientation].filter(Boolean).join(' · ') %></dd>
+          <% } %>
+          <% if (profile.looking_for && profile.looking_for.length) { %>
+            <dt>Looking for</dt>
+            <dd><%= profile.looking_for.join(', ') %></dd>
+          <% } %>
+          <% if (profile.drinking) { %><dt>Drinks</dt><dd><%= profile.drinking %></dd><% } %>
+          <% if (profile.smoking) { %><dt>Smokes</dt><dd><%= profile.smoking %></dd><% } %>
+          <dt>Member since</dt><dd><%= new Date(profile.created_at || Date.now()).toLocaleDateString('en-US',{month:'long',year:'numeric'}) %></dd>
+        </dl>
+
+        <% if (profile.interests && profile.interests.length) { %>
+          <div class="mt-4">
+            <div class="label">Interests</div>
+            <div class="chips">
+              <% profile.interests.forEach(function(t){ %><span class="tag"><%= t %></span><% }) %>
+            </div>
+          </div>
+        <% } %>
+
+        <% if (profile.about) { %>
+          <div class="about-block"><%= profile.about %></div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>

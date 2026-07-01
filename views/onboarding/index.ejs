@@ -1,0 +1,156 @@
+<%
+  var isCouple = accountType === 'couple' || accountType === 'group';
+  function has(arr, v){ return Array.isArray(arr) && arr.indexOf(v) !== -1; }
+  var currentLoc = (profile.city && profile.state) ? (profile.city + ', ' + profile.state) : (profile.location || '');
+  var genders = ['Male','Female','Non-binary'];
+  var orientations = ['Straight','Bi-curious','Bisexual','Heteroflexible','Pansexual','Gay','Lesbian'];
+%>
+<section class="page">
+  <div class="wrap narrow">
+    <% if (!isEdit) { %>
+      <div class="steps">
+        <div class="step"><span class="dot">1</span> Account</div>
+        <div class="step active"><span class="dot">2</span> Profile</div>
+        <div class="step"><span class="dot">3</span> Photos</div>
+      </div>
+    <% } %>
+
+    <div class="center mb-4">
+      <span class="eyebrow"><%= isEdit ? 'Edit profile' : 'Set up your profile' %></span>
+      <h1 class="mt-2"><%= isEdit ? 'Update your details' : 'Tell the community about you' %></h1>
+      <p class="muted"><%= accountTypes[accountType] %> account</p>
+    </div>
+
+    <% if (error) { %><div class="alert-inline"><%= error %></div><% } %>
+
+    <form action="<%= formAction %>" method="post" data-onboarding data-account-type="<%= accountType %>">
+      <div class="card card-pad">
+
+        <div class="form-section">
+          <h3>The basics</h3>
+          <div class="field">
+            <label for="display_name">Display name / handle</label>
+            <input type="text" name="display_name" id="display_name" maxlength="60" required
+                   value="<%= profile.display_name || '' %>" placeholder="e.g. J&amp;M_Charlotte" />
+            <div class="hint">Keep it discreet — most members use first initials or a handle.</div>
+          </div>
+          <div class="field">
+            <label for="headline">Headline</label>
+            <input type="text" name="headline" id="headline" maxlength="140"
+                   value="<%= profile.headline || '' %>" placeholder="Playful couple, new to the scene, love to laugh" />
+          </div>
+          <div class="field">
+            <label for="location">City</label>
+            <select name="location" id="location" required>
+              <option value="">Select your city…</option>
+              <% metros.forEach(function(city){ %>
+                <option value="<%= city %>" <%= currentLoc === city ? 'selected' : '' %>><%= city %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3><%= isCouple ? 'Partner 1' : 'About you' %></h3>
+          <div class="grid-3">
+            <div class="field">
+              <label for="p1_age">Age</label>
+              <input type="number" name="p1_age" id="p1_age" min="18" max="120" value="<%= profile.p1_age || '' %>" />
+            </div>
+            <div class="field">
+              <label for="p1_gender">Gender</label>
+              <select name="p1_gender" id="p1_gender">
+                <option value="">—</option>
+                <% genders.forEach(function(g){ %><option <%= profile.p1_gender===g?'selected':'' %>><%= g %></option><% }) %>
+              </select>
+            </div>
+            <div class="field">
+              <label for="p1_orientation">Orientation</label>
+              <select name="p1_orientation" id="p1_orientation">
+                <option value="">—</option>
+                <% orientations.forEach(function(o){ %><option <%= profile.p1_orientation===o?'selected':'' %>><%= o %></option><% }) %>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section" data-partner2 <%= isCouple ? '' : 'style="display:none"' %>>
+          <h3>Partner 2</h3>
+          <div class="grid-3">
+            <div class="field">
+              <label for="p2_age">Age</label>
+              <input type="number" name="p2_age" id="p2_age" min="18" max="120" value="<%= profile.p2_age || '' %>" />
+            </div>
+            <div class="field">
+              <label for="p2_gender">Gender</label>
+              <select name="p2_gender" id="p2_gender">
+                <option value="">—</option>
+                <% genders.forEach(function(g){ %><option <%= profile.p2_gender===g?'selected':'' %>><%= g %></option><% }) %>
+              </select>
+            </div>
+            <div class="field">
+              <label for="p2_orientation">Orientation</label>
+              <select name="p2_orientation" id="p2_orientation">
+                <option value="">—</option>
+                <% orientations.forEach(function(o){ %><option <%= profile.p2_orientation===o?'selected':'' %>><%= o %></option><% }) %>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Who you'd like to meet</h3>
+          <div class="chips">
+            <% lookingForOptions.forEach(function(opt){ %>
+              <label class="chip">
+                <input type="checkbox" name="looking_for" value="<%= opt.key %>" <%= has(profile.looking_for, opt.key) ? 'checked' : '' %> />
+                <%= opt.label %>
+              </label>
+            <% }) %>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Interests &amp; desires</h3>
+          <div class="chips">
+            <% interestTags.forEach(function(tag){ %>
+              <label class="chip">
+                <input type="checkbox" name="interests" value="<%= tag %>" <%= has(profile.interests, tag) ? 'checked' : '' %> />
+                <%= tag %>
+              </label>
+            <% }) %>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>A little more about you</h3>
+          <div class="field">
+            <label for="about">Bio</label>
+            <textarea name="about" id="about" maxlength="4000" placeholder="What brings you to the lifestyle? What are you looking for? Set the tone…"><%= profile.about || '' %></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="drinking">Drinking</label>
+              <select name="drinking" id="drinking">
+                <option value="">—</option>
+                <% ['Never','Socially','Regularly'].forEach(function(o){ %><option <%= profile.drinking===o?'selected':'' %>><%= o %></option><% }) %>
+              </select>
+            </div>
+            <div class="field">
+              <label for="smoking">Smoking</label>
+              <select name="smoking" id="smoking">
+                <option value="">—</option>
+                <% ['Never','Socially','Regularly','420 friendly'].forEach(function(o){ %><option <%= profile.smoking===o?'selected':'' %>><%= o %></option><% }) %>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row between wrap-gap">
+          <% if (isEdit) { %><a href="/profile" class="btn btn-ghost">Cancel</a><% } else { %><span></span><% } %>
+          <button class="btn btn-primary" type="submit"><%= isEdit ? 'Save changes' : 'Continue to photos' %></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

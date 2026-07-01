@@ -1,0 +1,54 @@
+<section class="page">
+  <div class="wrap">
+    <h1 class="page-title">Matches</h1>
+    <p class="page-lead">When you and another member both like each other, it's a match — and a conversation opens.</p>
+
+    <div class="tabs">
+      <a href="/matches?tab=matches" class="<%= tab==='matches'?'active':'' %>">Mutual matches (<%= matches.length %>)</a>
+      <a href="/matches?tab=liked" class="<%= tab==='liked'?'active':'' %>">Likes you (<%= likedYouCount %>)</a>
+    </div>
+
+    <% if (tab === 'liked') { %>
+      <% if (!isGold) { %>
+        <div class="empty-state">
+          <div class="big">🔒</div>
+          <h3><%= likedYouCount %> member<%= likedYouCount===1?'':'s' %> liked you</h3>
+          <p>See exactly who's into you with Gold — then like them back to match instantly.</p>
+          <a href="/membership" class="btn btn-gold mt-3">Reveal with Gold</a>
+        </div>
+      <% } else if (likedYou.length === 0) { %>
+        <div class="empty-state"><div class="big">✦</div><h3>No likes yet</h3><p>Keep your profile fresh and browse actively — likes will come.</p></div>
+      <% } else { %>
+        <div class="member-grid">
+          <% likedYou.forEach(function(m){ %>
+            <%- include('partials/member-card', { m: Object.assign({account_type:'', last_active:null}, m), showActions: true }) %>
+          <% }) %>
+        </div>
+      <% } %>
+    <% } else { %>
+      <% if (matches.length === 0) { %>
+        <div class="empty-state">
+          <div class="big">♥</div>
+          <h3>No matches yet</h3>
+          <p>Head to <a href="/browse" class="text-gold">Browse</a> and start liking members you're drawn to.</p>
+        </div>
+      <% } else { %>
+        <div class="member-grid">
+          <% matches.forEach(function(m){ %>
+            <article class="member-card">
+              <a href="/profile/<%= m.id %>" class="member-photo">
+                <% if (m.photo) { %><img src="/uploads/<%= m.photo %>" alt="" loading="lazy" />
+                <% } else { %><div class="placeholder"><%= (m.display_name||'?').charAt(0).toUpperCase() %></div><% } %>
+              </a>
+              <div class="meta">
+                <div class="name"><%= m.display_name %></div>
+                <div class="sub"><%= h.ACCOUNT_TYPES[m.account_type]||'' %><% if(m.city){%> · <%= m.city %>, <%= m.state %><%}%></div>
+                <a href="/messages/new/<%= m.id %>" class="btn btn-gold btn-sm btn-block mt-2">Message</a>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      <% } %>
+    <% } %>
+  </div>
+</section>

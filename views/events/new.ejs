@@ -1,0 +1,61 @@
+<section class="page">
+  <div class="wrap narrow">
+    <div class="center mb-4">
+      <span class="eyebrow">Host an event</span>
+      <h1 class="mt-2">Bring the community together</h1>
+    </div>
+
+    <% if (error) { %><div class="alert-inline"><%= error %></div><% } %>
+
+    <form action="/events" method="post" class="card card-pad">
+      <div class="field">
+        <label for="title">Event title</label>
+        <input type="text" name="title" id="title" required maxlength="120" value="<%= values.title || '' %>" placeholder="Midnight Masquerade" />
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="event_type">Type</label>
+          <select name="event_type" id="event_type">
+            <% Object.keys(eventTypes).forEach(function(k){ %><option value="<%= k %>" <%= values.event_type===k?'selected':'' %>><%= eventTypes[k] %></option><% }) %>
+          </select>
+        </div>
+        <div class="field">
+          <label for="venue">Venue (optional)</label>
+          <input type="text" name="venue" id="venue" maxlength="160" value="<%= values.venue || '' %>" placeholder="Private residence / club name" />
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="starts_at">Starts</label>
+          <input type="datetime-local" name="starts_at" id="starts_at" required value="<%= values.starts_at || '' %>" />
+        </div>
+        <div class="field">
+          <label for="ends_at">Ends (optional)</label>
+          <input type="datetime-local" name="ends_at" id="ends_at" value="<%= values.ends_at || '' %>" />
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="city">City</label>
+          <input type="text" name="city" id="city" maxlength="80" value="<%= values.city || '' %>" />
+        </div>
+        <div class="field">
+          <label for="state">State</label>
+          <input type="text" name="state" id="state" maxlength="2" value="<%= values.state || '' %>" style="text-transform:uppercase" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea name="description" id="description" maxlength="5000" placeholder="Dress code, theme, who's welcome, entry details…"><%= values.description || '' %></textarea>
+      </div>
+      <label class="switch mb-3">
+        <input type="checkbox" name="is_public" checked />
+        <span class="track"></span> List publicly to all members
+      </label>
+      <div class="row between">
+        <a href="/events" class="btn btn-ghost">Cancel</a>
+        <button class="btn btn-primary" type="submit">Publish event</button>
+      </div>
+    </form>
+  </div>
+</section>

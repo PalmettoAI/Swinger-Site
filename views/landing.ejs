@@ -1,0 +1,95 @@
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="rise">
+        <span class="eyebrow">Members-only · 18+</span>
+        <h1>The lifestyle,<br /><em>elevated.</em></h1>
+        <p class="hero-sub">
+          A discreet, beautifully-built home for open-minded couples and singles.
+          Real profiles, private photo control, and events near you — without the
+          clutter and dated design of the old guard.
+        </p>
+        <div class="hero-cta">
+          <a href="/enter" class="btn btn-primary">Create your free profile</a>
+          <a href="/about" class="btn btn-ghost">How it works</a>
+        </div>
+        <div class="stats-row">
+          <div class="stat">
+            <div class="n"><%= Number(stats.members || 0).toLocaleString() %>+</div>
+            <div class="l">Members</div>
+          </div>
+          <div class="stat">
+            <div class="n"><%= Number(stats.cities || 0).toLocaleString() %></div>
+            <div class="l">Cities</div>
+          </div>
+          <div class="stat">
+            <div class="n"><%= Number(stats.events || 0).toLocaleString() %></div>
+            <div class="l">Upcoming events</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual rise rise-2" aria-hidden="true">
+        <div class="deco-ring"></div>
+        <div class="seal-lg"><%= brand.name.charAt(0) %></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Why <%= brand.name %></span>
+      <h2>Built for the way the lifestyle actually works</h2>
+      <p>The incumbents are a decade behind. We started from a blank page — with privacy, taste, and trust at the center.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature card card-pad" data-reveal>
+        <div class="ficon">🔒</div>
+        <h3>Private by design</h3>
+        <p>Keep your face photos locked behind a frosted-glass gallery. Grant access one member at a time — you're always in control.</p>
+      </div>
+      <div class="feature card card-pad" data-reveal>
+        <div class="ficon">✦</div>
+        <h3>Real matches, near you</h3>
+        <p>Search by city, distance, interests and desires. Mutual likes open a private conversation — no shouting into the void.</p>
+      </div>
+      <div class="feature card card-pad" data-reveal>
+        <div class="ficon">🥂</div>
+        <h3>Events &amp; clubs</h3>
+        <p>Discover house parties, lifestyle clubs, meet-and-greets and resort takeovers. RSVP and see who else is going.</p>
+      </div>
+      <div class="feature card card-pad" data-reveal>
+        <div class="ficon">💬</div>
+        <h3>Messaging that respects you</h3>
+        <p>Clean, modern conversations. No pop-ups, no upsell every click. Just a quality way to connect.</p>
+      </div>
+      <div class="feature card card-pad" data-reveal>
+        <div class="ficon">👥</div>
+        <h3>Couples &amp; singles</h3>
+        <p>Full couple profiles with both partners, plus verified single members. Say exactly what — and who — you're looking for.</p>
+      </div>
+      <div class="feature card card-pad" data-reveal>
+        <div class="ficon">🛡️</div>
+        <h3>Safety first</h3>
+        <p>Block and report in a tap. Consent-forward community guidelines. A team that actually reviews reports.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="panel" style="text-align:center; padding: var(--sp-6)" data-reveal>
+      <span class="eyebrow">Join the founding members</span>
+      <h2 class="mt-2">Your city is waiting</h2>
+      <p class="muted mt-2" style="max-width:52ch;margin-inline:auto">
+        Creating a profile is free. Upgrade to Gold whenever you want the full experience.
+      </p>
+      <div class="hero-cta mt-4" style="justify-content:center">
+        <a href="/enter" class="btn btn-gold">Get started free</a>
+        <a href="/pricing" class="btn btn-ghost">See membership</a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,86 @@
+<section class="page">
+  <div class="wrap">
+    <div class="row between wrap-gap mb-3">
+      <div>
+        <h1 class="page-title">Browse members</h1>
+        <p class="page-lead">Discover couples and singles in the lifestyle.</p>
+      </div>
+      <% if (!isGold) { %>
+        <a href="/membership" class="btn btn-gold btn-sm">Unlock advanced search</a>
+      <% } %>
+    </div>
+
+    <form method="get" action="/browse" class="filter-bar">
+      <div class="field">
+        <label for="q">Search</label>
+        <input type="text" name="q" id="q" value="<%= filters.q %>" placeholder="Name, keyword…" />
+      </div>
+      <div class="field">
+        <label for="account_type">Type</label>
+        <select name="account_type" id="account_type">
+          <option value="">Everyone</option>
+          <% Object.keys(accountTypes).forEach(function(k){ %>
+            <option value="<%= k %>" <%= filters.account_type===k?'selected':'' %>><%= accountTypes[k] %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="field">
+        <label for="state">State</label>
+        <select name="state" id="state">
+          <option value="">Anywhere</option>
+          <% states.forEach(function(s){ %><option <%= filters.state===s?'selected':'' %>><%= s %></option><% }) %>
+        </select>
+      </div>
+
+      <% if (isGold) { %>
+        <div class="field" style="flex:2 1 220px">
+          <label for="interests">Interests</label>
+          <select name="interests" id="interests" multiple size="1" style="height:auto">
+            <% interestTags.forEach(function(t){ %>
+              <option value="<%= t %>" <%= filters.interests.indexOf(t)!==-1?'selected':'' %>><%= t %></option>
+            <% }) %>
+          </select>
+        </div>
+      <% } %>
+
+      <label class="switch" style="align-self:center">
+        <input type="checkbox" name="online" value="1" <%= filters.online?'checked':'' %> />
+        <span class="track"></span> Online now
+      </label>
+      <label class="switch" style="align-self:center">
+        <input type="checkbox" name="has_photo" value="1" <%= filters.has_photo?'checked':'' %> />
+        <span class="track"></span> Has photos
+      </label>
+
+      <button class="btn btn-primary btn-sm" type="submit">Filter</button>
+      <a href="/browse" class="btn btn-ghost btn-sm">Reset</a>
+    </form>
+
+    <% if (!isGold) { %>
+      <p class="gate-lock-note mb-3">🔒 Filtering by interests &amp; distance is a Gold feature. <a href="/membership" class="text-gold">Upgrade →</a></p>
+    <% } %>
+
+    <% if (members.length === 0) { %>
+      <div class="empty-state">
+        <div class="big">✦</div>
+        <h3>No members match yet</h3>
+        <p>Try widening your filters — or be the one others discover by completing your profile and adding photos.</p>
+      </div>
+    <% } else { %>
+      <div class="member-grid">
+        <% members.forEach(function(m){ %>
+          <%- include('partials/member-card', { m: m, showActions: true }) %>
+        <% }) %>
+      </div>
+
+      <div class="row between mt-5">
+        <% if (page > 1) { %>
+          <a class="btn btn-ghost btn-sm" href="<%= '/browse?' + new URLSearchParams(Object.assign({}, query, {page: page-1})).toString() %>">← Previous</a>
+        <% } else { %><span></span><% } %>
+        <% if (hasNext) { %>
+          <a class="btn btn-ghost btn-sm" href="<%= '/browse?' + new URLSearchParams(Object.assign({}, query, {page: page+1})).toString() %>">Next →</a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</section>
