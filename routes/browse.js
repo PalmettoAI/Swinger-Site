@@ -49,6 +49,21 @@ router.get('/', async (req, res) => {
       where.push(`p.interests && $${params.length}::text[]`);
     }
   }
+  // Age range filter (applies to p1_age; for couples, either partner matches)
+  if (q.min_age) {
+    const minAge = parseInt(q.min_age, 10);
+    if (minAge >= 18 && minAge <= 99) {
+      params.push(minAge);
+      where.push(`(p.p1_age >= $${params.length} OR p.p2_age >= $${params.length})`);
+    }
+  }
+  if (q.max_age) {
+    const maxAge = parseInt(q.max_age, 10);
+    if (maxAge >= 18 && maxAge <= 99) {
+      params.push(maxAge);
+      where.push(`(p.p1_age <= $${params.length} OR p.p2_age <= $${params.length})`);
+    }
+  }
   if (q.online === '1') {
     where.push(`u.last_active > now() - interval '15 minutes'`);
   }
@@ -100,6 +115,8 @@ router.get('/', async (req, res) => {
       online: q.online === '1',
       has_photo: q.has_photo === '1',
       interests: interestFilter,
+      min_age: q.min_age || '',
+      max_age: q.max_age || '',
     },
     isGold,
     page,

@@ -12,6 +12,7 @@
         <a href="/matches" class="<%= path.startsWith('/matches') ? 'active' : '' %>">Matches</a>
         <a href="/messages" class="<%= path.startsWith('/messages') ? 'active' : '' %>">Messages</a>
         <a href="/events" class="<%= path.startsWith('/events') ? 'active' : '' %>">Events</a>
+        <a href="/forum" class="<%= path.startsWith('/forum') ? 'active' : '' %>">Forum</a>
         <% if (currentUser.membership !== 'gold') { %>
           <a href="/membership" class="text-gold">Go Gold</a>
         <% } %>

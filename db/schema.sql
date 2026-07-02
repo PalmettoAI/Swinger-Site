@@ -169,3 +169,48 @@ CREATE TABLE IF NOT EXISTS message_counters (
   count   int  NOT NULL DEFAULT 0,
   PRIMARY KEY (user_id, day)
 );
+
+-- ── Forum ────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS forum_categories (
+  id          serial PRIMARY KEY,
+  slug        text UNIQUE NOT NULL,
+  name        text NOT NULL,
+  description text,
+  sort_order  int  NOT NULL DEFAULT 0,
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+
+-- Seed default categories if they don't exist yet
+INSERT INTO forum_categories (slug, name, description, sort_order) VALUES
+  ('introductions', 'Introductions',    'New to Velvet? Say hello and tell us about yourselves.',          1),
+  ('general',       'General Chat',     'Anything and everything — the community living room.',            2),
+  ('advice',        'Advice & Questions','First-timers, curious couples, seasoned veterans — ask away.',  3),
+  ('events',        'Events & Meetups', 'Share upcoming parties, club nights, or plan a local meetup.',   4),
+  ('humor',         'Humor & Off-Topic','Memes, funny stories, and anything that made you laugh.',         5)
+ON CONFLICT (slug) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS forum_threads (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  category_id  int  NOT NULL REFERENCES forum_categories(id) ON DELETE CASCADE,
+  author_id    uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title        text NOT NULL,
+  slug         text NOT NULL,
+  is_pinned    boolean NOT NULL DEFAULT false,
+  is_locked    boolean NOT NULL DEFAULT false,
+  view_count   int  NOT NULL DEFAULT 0,
+  post_count   int  NOT NULL DEFAULT 0,
+  last_post_at timestamptz NOT NULL DEFAULT now(),
+  created_at   timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (category_id, slug)
+);
+CREATE INDEX IF NOT EXISTS idx_forum_threads_category ON forum_threads (category_id, is_pinned DESC, last_post_at DESC);
+
+CREATE TABLE IF NOT EXISTS forum_posts (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  thread_id  uuid NOT NULL REFERENCES forum_threads(id) ON DELETE CASCADE,
+  author_id  uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  body       text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_forum_posts_thread ON forum_posts (thread_id, created_at);

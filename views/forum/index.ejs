@@ -1,0 +1,37 @@
+<section class="page">
+  <div class="wrap">
+    <div class="row between wrap-gap mb-3">
+      <div>
+        <h1 class="page-title">Community Forum</h1>
+        <p class="page-lead">Connect, share, and learn from the community.</p>
+      </div>
+    </div>
+
+    <div class="forum-categories">
+      <% categories.forEach(function(cat) { %>
+        <a href="/forum/<%= cat.slug %>" class="forum-category-card">
+          <div class="forum-cat-body">
+            <h2 class="forum-cat-name"><%= h.escapeHtml(cat.name) %></h2>
+            <p class="forum-cat-desc"><%= h.escapeHtml(cat.description || '') %></p>
+          </div>
+          <div class="forum-cat-stats">
+            <div class="stat">
+              <span class="stat-num"><%= cat.thread_count %></span>
+              <span class="stat-label">threads</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num"><%= cat.post_count %></span>
+              <span class="stat-label">posts</span>
+            </div>
+            <% if (cat.last_post_at) { %>
+              <div class="stat">
+                <span class="stat-num text-muted"><%= h.timeAgo(cat.last_post_at) %></span>
+                <span class="stat-label">last post</span>
+              </div>
+            <% } %>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>

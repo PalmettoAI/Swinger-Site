@@ -104,6 +104,7 @@ app.use('/events', require('./routes/events'));
 app.use('/membership', require('./routes/membership'));
 app.use('/photos', require('./routes/photos'));
 app.use('/profile', require('./routes/profile'));
+app.use('/forum', require('./routes/forum'));
 
 // ── 404 ──────────────────────────────────────────────────────────────
 app.use((req, res) => {

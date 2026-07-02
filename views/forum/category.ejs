@@ -1,0 +1,54 @@
+<section class="page">
+  <div class="wrap">
+
+    <div class="breadcrumb mb-2">
+      <a href="/forum">Forum</a> <span class="sep">›</span> <%= h.escapeHtml(cat.name) %>
+    </div>
+
+    <div class="row between wrap-gap mb-3">
+      <div>
+        <h1 class="page-title"><%= h.escapeHtml(cat.name) %></h1>
+        <% if (cat.description) { %>
+          <p class="page-lead"><%= h.escapeHtml(cat.description) %></p>
+        <% } %>
+      </div>
+      <a href="/forum/<%= cat.slug %>/new" class="btn btn-primary btn-sm">+ New thread</a>
+    </div>
+
+    <% if (threads.length === 0) { %>
+      <div class="empty-state">
+        <div class="big">✦</div>
+        <h3>No threads yet</h3>
+        <p>Be the first to start a conversation in this category.</p>
+        <a href="/forum/<%= cat.slug %>/new" class="btn btn-primary">Start a thread</a>
+      </div>
+    <% } else { %>
+      <div class="forum-thread-list">
+        <% threads.forEach(function(t) { %>
+          <a href="/forum/<%= cat.slug %>/<%= t.slug %>" class="forum-thread-row">
+            <div class="thread-main">
+              <% if (t.is_pinned) { %><span class="pill pill-pinned">Pinned</span> <% } %>
+              <% if (t.is_locked) { %><span class="pill pill-locked">Locked</span> <% } %>
+              <span class="thread-title"><%= h.escapeHtml(t.title) %></span>
+              <span class="thread-meta">by <strong><%= h.escapeHtml(t.author_name) %></strong> · <%= h.timeAgo(t.created_at) %></span>
+            </div>
+            <div class="thread-stats">
+              <span class="stat-num" title="replies"><%= t.post_count %> <span class="stat-label">replies</span></span>
+              <span class="stat-num" title="views"><%= t.view_count %> <span class="stat-label">views</span></span>
+              <span class="text-muted text-sm"><%= h.timeAgo(t.last_post_at) %></span>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+
+      <div class="row between mt-5">
+        <% if (page > 1) { %>
+          <a class="btn btn-ghost btn-sm" href="/forum/<%= cat.slug %>?page=<%= page - 1 %>">← Previous</a>
+        <% } else { %><span></span><% } %>
+        <% if (hasNext) { %>
+          <a class="btn btn-ghost btn-sm" href="/forum/<%= cat.slug %>?page=<%= page + 1 %>">Next →</a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</section>

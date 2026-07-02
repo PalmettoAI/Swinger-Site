@@ -1,0 +1,68 @@
+<section class="page">
+  <div class="wrap">
+
+    <div class="breadcrumb mb-2">
+      <a href="/forum">Forum</a> <span class="sep">›</span>
+      <a href="/forum/<%= cat.slug %>"><%= h.escapeHtml(cat.name) %></a> <span class="sep">›</span>
+      <%= h.escapeHtml(thread.title) %>
+    </div>
+
+    <div class="row between wrap-gap mb-4">
+      <h1 class="page-title" style="flex:1">
+        <% if (thread.is_pinned) { %><span class="pill pill-pinned">Pinned</span> <% } %>
+        <% if (thread.is_locked) { %><span class="pill pill-locked">Locked</span> <% } %>
+        <%= h.escapeHtml(thread.title) %>
+      </h1>
+    </div>
+
+    <div class="forum-posts" id="bottom">
+      <% posts.forEach(function(post) { %>
+        <article class="forum-post" id="post-<%= post.id %>">
+          <div class="post-author">
+            <a href="/profile/<%= post.author_id %>" class="post-avatar">
+              <% if (post.author_photo) { %>
+                <img src="/uploads/<%= post.author_photo %>" alt="<%= h.escapeHtml(post.author_name) %>" />
+              <% } else { %>
+                <div class="avatar-placeholder"><%= (post.author_name || '?').charAt(0).toUpperCase() %></div>
+              <% } %>
+            </a>
+            <div class="post-author-meta">
+              <a href="/profile/<%= post.author_id %>" class="post-author-name"><%= h.escapeHtml(post.author_name) %></a>
+              <% if (post.author_membership === 'gold') { %><span class="pill pill-gold" style="font-size:10px">Gold</span><% } %>
+              <span class="text-muted text-sm"><%= h.timeAgo(post.created_at) %></span>
+            </div>
+          </div>
+          <div class="post-body"><%- h.escapeHtml(post.body).replace(/\n/g, '<br>') %></div>
+        </article>
+      <% }) %>
+    </div>
+
+    <div class="row between mt-4 mb-4">
+      <% if (page > 1) { %>
+        <a class="btn btn-ghost btn-sm" href="/forum/<%= cat.slug %>/<%= thread.slug %>?page=<%= page - 1 %>">← Earlier</a>
+      <% } else { %><span></span><% } %>
+      <% if (hasNext) { %>
+        <a class="btn btn-ghost btn-sm" href="/forum/<%= cat.slug %>/<%= thread.slug %>?page=<%= page + 1 %>">Later →</a>
+      <% } %>
+    </div>
+
+    <% if (!thread.is_locked) { %>
+      <div class="forum-reply-box">
+        <h3 class="mb-2">Add a reply</h3>
+        <form action="/forum/<%= cat.slug %>/<%= thread.slug %>/reply" method="post">
+          <div class="field">
+            <textarea name="body" rows="5" placeholder="Share your thoughts…" required minlength="2" maxlength="20000" class="full-width"></textarea>
+          </div>
+          <div class="row end mt-2">
+            <button class="btn btn-primary" type="submit">Post reply</button>
+          </div>
+        </form>
+      </div>
+    <% } else { %>
+      <div class="empty-state" style="padding:2rem 0">
+        <p class="text-muted">This thread is locked — no new replies can be added.</p>
+      </div>
+    <% } %>
+
+  </div>
+</section>

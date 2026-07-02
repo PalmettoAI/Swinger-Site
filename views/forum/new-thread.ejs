@@ -1,0 +1,40 @@
+<section class="page">
+  <div class="wrap page-narrow">
+
+    <div class="breadcrumb mb-2">
+      <a href="/forum">Forum</a> <span class="sep">›</span>
+      <a href="/forum/<%= cat.slug %>"><%= h.escapeHtml(cat.name) %></a> <span class="sep">›</span>
+      New thread
+    </div>
+
+    <h1 class="page-title mb-4">Start a new thread</h1>
+
+    <% if (errors && errors.length) { %>
+      <div class="flash flash-error mb-3">
+        <ul>
+          <% errors.forEach(function(e) { %><li><%= h.escapeHtml(e) %></li><% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form action="/forum/<%= cat.slug %>/new" method="post">
+      <div class="field mb-3">
+        <label for="title">Thread title</label>
+        <input type="text" name="title" id="title" required minlength="3" maxlength="200"
+               value="<%= h.escapeHtml(typeof formTitle !== 'undefined' ? formTitle : '') %>"
+               placeholder="What's this thread about?" class="full-width" />
+      </div>
+
+      <div class="field mb-3">
+        <label for="body">Your post</label>
+        <textarea name="body" id="body" rows="8" required minlength="10" maxlength="20000"
+                  placeholder="Share your story, question, or thoughts…" class="full-width"><%= h.escapeHtml(typeof formBody !== 'undefined' ? formBody : '') %></textarea>
+      </div>
+
+      <div class="row between">
+        <a href="/forum/<%= cat.slug %>" class="btn btn-ghost">Cancel</a>
+        <button class="btn btn-primary" type="submit">Post thread</button>
+      </div>
+    </form>
+  </div>
+</section>

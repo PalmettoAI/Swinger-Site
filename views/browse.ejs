@@ -43,6 +43,15 @@
         </div>
       <% } %>
 
+      <div class="field" style="flex:0 0 80px">
+        <label for="min_age">Min age</label>
+        <input type="number" name="min_age" id="min_age" min="18" max="99" value="<%= filters.min_age %>" placeholder="18" />
+      </div>
+      <div class="field" style="flex:0 0 80px">
+        <label for="max_age">Max age</label>
+        <input type="number" name="max_age" id="max_age" min="18" max="99" value="<%= filters.max_age %>" placeholder="99" />
+      </div>
+
       <label class="switch" style="align-self:center">
         <input type="checkbox" name="online" value="1" <%= filters.online?'checked':'' %> />
         <span class="track"></span> Online now
