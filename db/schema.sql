@@ -214,3 +214,14 @@ CREATE TABLE IF NOT EXISTS forum_posts (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_forum_posts_thread ON forum_posts (thread_id, created_at);
+
+
+CREATE TABLE IF NOT EXISTS contact_submissions (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name       text NOT NULL,
+  email      text NOT NULL,
+  subject    text NOT NULL DEFAULT 'General Inquiry',
+  message    text NOT NULL,
+  read       boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now()
+);

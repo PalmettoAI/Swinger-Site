@@ -62,6 +62,36 @@ router.get('/pricing', (req, res) =>
   res.render('pricing-public', { title: 'Membership', bodyClass: 'page-narrow' })
 );
 
+// ── Contact ──────────────────────────────────────────────────────────
+router.get('/contact', (req, res) =>
+  res.render('contact', { title: 'Contact', bodyClass: 'page-narrow' })
+);
+
+router.post('/contact', async (req, res) => {
+  const { name, email, subject, message } = req.body;
+  if (!name || !email || !message) {
+    return res.render('contact', {
+      title: 'Contact', bodyClass: 'page-narrow',
+      error: 'Please fill in all required fields.',
+      form: req.body,
+    });
+  }
+  try {
+    await db.query(
+      `INSERT INTO contact_submissions (name, email, subject, message)
+       VALUES ($1, $2, $3, $4)`,
+      [name.trim(), email.trim(), subject || 'General Inquiry', message.trim()]
+    );
+    res.render('contact', { title: 'Contact', bodyClass: 'page-narrow', success: true });
+  } catch (e) {
+    res.render('contact', {
+      title: 'Contact', bodyClass: 'page-narrow',
+      error: 'Something went wrong — please try again.',
+      form: req.body,
+    });
+  }
+});
+
 // ── Legal ────────────────────────────────────────────────────────────
 router.get('/terms', (req, res) =>
   res.render('legal/terms', { title: 'Terms of Service', bodyClass: 'page-narrow legal' })
