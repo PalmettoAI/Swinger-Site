@@ -25,8 +25,9 @@ CREATE TABLE IF NOT EXISTS users (
   membership_since   timestamptz,
   membership_expires timestamptz,
   age_verified  boolean NOT NULL DEFAULT false,
-  is_active     boolean NOT NULL DEFAULT true,
-  is_admin      boolean NOT NULL DEFAULT false,
+  is_active          boolean NOT NULL DEFAULT true,
+  is_admin           boolean NOT NULL DEFAULT false,
+  is_founding_member boolean NOT NULL DEFAULT false,
   onboarded     boolean NOT NULL DEFAULT false,
   last_active   timestamptz NOT NULL DEFAULT now(),
   created_at    timestamptz NOT NULL DEFAULT now()

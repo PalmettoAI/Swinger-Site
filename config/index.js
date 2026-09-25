@@ -95,4 +95,10 @@ module.exports = {
   seed: {
     enabled: String(process.env.SEED_DEMO || 'false') === 'true',
   },
+
+  founding: {
+    limit: parseInt(process.env.FOUNDING_LIMIT || '500', 10),
+    goldMonths: parseInt(process.env.FOUNDING_GOLD_MONTHS || '3', 10),
+    enabled: String(process.env.FOUNDING_ENABLED || 'true') === 'true',
+  },
 };

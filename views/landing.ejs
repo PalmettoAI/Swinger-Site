@@ -80,8 +80,25 @@
 
 <section class="section">
   <div class="wrap">
-    <div class="panel" style="text-align:center; padding: var(--sp-6)" data-reveal>
-      <span class="eyebrow">Join the founding members</span>
+    <% if (foundingSpots !== null && foundingSpots > 0) { %>
+    <div class="panel" style="text-align:center;padding:var(--sp-6);background:linear-gradient(135deg,rgba(212,175,55,.1),rgba(212,175,55,.03));border:1px solid rgba(212,175,55,.3)" data-reveal>
+      <span class="eyebrow" style="color:var(--gold)">Limited-time offer</span>
+      <h2 class="mt-2">Founding Member — <%= foundingMonths %> Months Gold Free</h2>
+      <p class="muted mt-2" style="max-width:52ch;margin-inline:auto">
+        The first <%= foundingLimit.toLocaleString() %> members get full Gold access free — no credit card needed. Lock in your founding status before spots are gone.
+      </p>
+      <div class="founding-counter mt-3" style="display:inline-flex;align-items:center;gap:.75rem;background:rgba(0,0,0,.25);padding:.6rem 1.25rem;border-radius:999px">
+        <span style="color:var(--rose);font-weight:700;font-size:1.1rem"><%= foundingSpots.toLocaleString() %></span>
+        <span class="muted" style="font-size:.9rem">of <%= foundingLimit.toLocaleString() %> spots remaining</span>
+      </div>
+      <div class="hero-cta mt-4" style="justify-content:center">
+        <a href="/signup" class="btn btn-gold">Claim your free Gold</a>
+        <a href="/pricing" class="btn btn-ghost">See what's included</a>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="panel" style="text-align:center;padding:var(--sp-6)" data-reveal>
+      <span class="eyebrow">Join the community</span>
       <h2 class="mt-2">Your city is waiting</h2>
       <p class="muted mt-2" style="max-width:52ch;margin-inline:auto">
         Creating a profile is free. Upgrade to Gold whenever you want the full experience.
@@ -91,5 +108,6 @@
         <a href="/pricing" class="btn btn-ghost">See membership</a>
       </div>
     </div>
+    <% } %>
   </div>
 </section>

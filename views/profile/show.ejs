@@ -62,6 +62,7 @@
         <h1>
           <%= profile.display_name %>
           <% if (user.membership === 'gold') { %><span class="pill pill-gold">Gold</span><% } %>
+          <% if (user.is_founding_member) { %><span class="pill" style="background:rgba(212,175,55,.15);color:var(--gold);border:1px solid rgba(212,175,55,.4)">★ Founding Member</span><% } %>
           <% if (mutual) { %><span class="pill" style="color:var(--rose)">♥ Matched</span><% } %>
         </h1>
         <div class="sub">

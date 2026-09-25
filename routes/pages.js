@@ -11,6 +11,7 @@ router.get('/', async (req, res) => {
   if (req.user && req.user.onboarded) return res.redirect('/browse');
 
   let stats = { members: 0, cities: 0, events: 0 };
+  let foundingSpots = null;
   try {
     if (config.db.url) {
       const q = await db.query(`
@@ -20,6 +21,9 @@ router.get('/', async (req, res) => {
           (SELECT count(*) FROM events WHERE starts_at > now()) AS events
       `);
       stats = q.rows[0];
+      if (config.founding.enabled) {
+        foundingSpots = Math.max(0, config.founding.limit - parseInt(stats.members, 10));
+      }
     }
   } catch (_) { /* landing still renders without stats */ }
 
@@ -28,6 +32,9 @@ router.get('/', async (req, res) => {
     layout: 'layout',
     bodyClass: 'landing',
     stats,
+    foundingSpots,
+    foundingMonths: config.founding.goldMonths,
+    foundingLimit: config.founding.limit,
   });
 });
 
