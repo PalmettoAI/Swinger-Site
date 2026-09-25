@@ -1,0 +1,27 @@
+<section class="page">
+  <div class="wrap">
+    <div class="page-header center mb-5">
+      <span class="eyebrow">Stories</span>
+      <h1 class="mt-2">From the lifestyle</h1>
+      <p class="page-lead muted">Real stories. Curious couples. The lifestyle, honestly told.</p>
+    </div>
+
+    <% if (stories.length === 0) { %>
+    <p class="center muted">No stories yet — check back soon.</p>
+    <% } else { %>
+    <div class="stories-grid">
+      <% stories.forEach(story => { %>
+      <a href="/stories/<%= story.slug %>" class="story-card card card-pad">
+        <div class="story-meta">
+          <span class="eyebrow"><%= story.category %></span>
+          <span class="story-date muted text-sm"><%= new Date(story.published_at).toLocaleDateString('en-US', {month:'long', year:'numeric'}) %></span>
+        </div>
+        <h2 class="story-title mt-1 mb-2"><%= story.title %></h2>
+        <p class="muted"><%= story.excerpt %></p>
+        <span class="story-read-more">Read the story →</span>
+      </a>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>

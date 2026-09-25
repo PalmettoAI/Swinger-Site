@@ -1,0 +1,19 @@
+<article class="page">
+  <div class="wrap narrow">
+    <div class="story-header mb-4">
+      <a href="/stories" class="back-link muted text-sm">← All stories</a>
+      <span class="eyebrow mt-3"><%= story.category %></span>
+      <h1 class="mt-2 mb-1"><%= story.title %></h1>
+      <p class="muted text-sm"><%= new Date(story.published_at).toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'}) %></p>
+    </div>
+
+    <div class="story-body">
+      <%- story.body_html %>
+    </div>
+
+    <div class="story-cta card card-pad center mt-6">
+      <p class="mb-3">Ready to write your own story?</p>
+      <a href="/enter" class="btn btn-primary">Join Velvet — it's free</a>
+    </div>
+  </div>
+</article>

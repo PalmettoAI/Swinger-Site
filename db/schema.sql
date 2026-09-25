@@ -225,3 +225,15 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
   read       boolean NOT NULL DEFAULT false,
   created_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE TABLE IF NOT EXISTS stories (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  title        text NOT NULL,
+  slug         text NOT NULL UNIQUE,
+  category     text NOT NULL DEFAULT 'First Time',
+  excerpt      text NOT NULL,
+  body         text NOT NULL,
+  published_at timestamptz NOT NULL DEFAULT now(),
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_stories_published ON stories (published_at DESC);
