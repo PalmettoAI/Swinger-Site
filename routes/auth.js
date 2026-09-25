@@ -10,7 +10,7 @@ const { ACCOUNT_TYPES } = require('../lib/helpers');
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // ── Signup ───────────────────────────────────────────────────────────
-router.get('/signup', requireAge, (req, res) => {
+router.get('/signup', (req, res) => {
   if (req.user) return res.redirect('/browse');
   res.render('auth/signup', {
     title: 'Create your account',
@@ -21,7 +21,7 @@ router.get('/signup', requireAge, (req, res) => {
   });
 });
 
-router.post('/signup', requireAge, async (req, res) => {
+router.post('/signup', async (req, res) => {
   const email = String(req.body.email || '').trim();
   const password = String(req.body.password || '');
   const accountType = String(req.body.account_type || 'couple');
