@@ -3,10 +3,34 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const https = require('https');
 const db = require('../db/pool');
 const { requireAge } = require('../middleware/auth');
 const { ACCOUNT_TYPES } = require('../lib/helpers');
 const config = require('../config');
+const rateLimit = require('express-rate-limit');
+
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50, standardHeaders: true, legacyHeaders: false });
+
+function notifyNewSignup(accountType) {
+  const webhookUrl = process.env.DISCORD_SIGNUP_WEBHOOK;
+  if (!webhookUrl) return;
+  try {
+    const body = JSON.stringify({
+      content: `🎉 New member joined Swing Velvet — **${accountType}**`,
+    });
+    const url = new URL(webhookUrl);
+    const req = https.request({
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+    });
+    req.on('error', () => {});
+    req.write(body);
+    req.end();
+  } catch (_) {}
+}
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -32,7 +56,7 @@ router.get('/signup', async (req, res) => {
   });
 });
 
-router.post('/signup', async (req, res) => {
+router.post('/signup', authLimiter, async (req, res) => {
   const email = String(req.body.email || '').trim();
   const password = String(req.body.password || '');
   const accountType = String(req.body.account_type || 'couple');
@@ -65,7 +89,7 @@ router.post('/signup', async (req, res) => {
       await client.query('BEGIN');
       try {
         const countRes = await client.query(
-          'SELECT count(*) FROM users WHERE is_active = true FOR UPDATE'
+          'SELECT count(*) FROM users WHERE is_active = true'
         );
         const taken = parseInt(countRes.rows[0].count, 10);
         const isFounder = config.founding.enabled && taken < config.founding.limit;
@@ -95,6 +119,7 @@ router.post('/signup', async (req, res) => {
       }
     });
 
+    notifyNewSignup(accountType);
     req.session.userId = userId;
     req.session.ageOk = true;
     return res.redirect('/onboarding');
@@ -116,7 +141,7 @@ router.get('/login', (req, res) => {
   });
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
   const password = String(req.body.password || '');
   const next = req.body.next || '/browse';

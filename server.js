@@ -7,8 +7,6 @@ const helmet = require('helmet');
 const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 const expressLayouts = require('express-ejs-layouts');
-const rateLimit = require('express-rate-limit');
-
 const config = require('./config');
 const { pool } = require('./db/pool');
 const { migrate } = require('./db/migrate');
@@ -90,12 +88,9 @@ app.use((req, res, next) => {
 
 app.use(loadUser);
 
-// ── Rate limiting on auth endpoints ──────────────────────────────────
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50, standardHeaders: true, legacyHeaders: false });
-
 // ── Routes ───────────────────────────────────────────────────────────
 app.use('/', require('./routes/pages'));
-app.use('/', authLimiter, require('./routes/auth'));
+app.use('/', require('./routes/auth'));
 app.use('/onboarding', require('./routes/onboarding'));
 app.use('/browse', require('./routes/browse'));
 app.use('/matches', require('./routes/matches'));
@@ -106,6 +101,7 @@ app.use('/photos', require('./routes/photos'));
 app.use('/profile', require('./routes/profile'));
 app.use('/forum', require('./routes/forum'));
 app.use('/stories', require('./routes/stories'));
+app.use('/api/internal', require('./routes/internal'));
 
 // ── 404 ──────────────────────────────────────────────────────────────
 app.use((req, res) => {
