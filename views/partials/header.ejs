@@ -1,7 +1,7 @@
 <header class="site-header">
   <div class="wrap">
     <a class="brand-mark" href="/">
-      <span class="seal"><%= brand.name.charAt(0) %></span>
+      <span class="seal"><%= brand.seal || brand.name.charAt(0) %></span>
       <%= brand.name %>
     </a>
 
@@ -11,6 +11,7 @@
         <a href="/browse" class="<%= path.startsWith('/browse') ? 'active' : '' %>">Browse</a>
         <a href="/matches" class="<%= path.startsWith('/matches') ? 'active' : '' %>">Matches</a>
         <a href="/messages" class="<%= path.startsWith('/messages') ? 'active' : '' %>">Messages</a>
+        <a href="/stories" class="<%= path.startsWith('/stories') ? 'active' : '' %>">Stories</a>
         <a href="/events" class="<%= path.startsWith('/events') ? 'active' : '' %>">Events</a>
         <a href="/forum" class="<%= path.startsWith('/forum') ? 'active' : '' %>">Forum</a>
         <% if (currentUser.membership !== 'gold') { %>
@@ -26,6 +27,7 @@
       <button class="nav-toggle" aria-label="Menu" data-nav-toggle>☰</button>
       <nav class="nav-links" id="nav">
         <a href="/about" class="<%= path === '/about' ? 'active' : '' %>">About</a>
+        <a href="/stories" class="<%= path.startsWith('/stories') ? 'active' : '' %>">Stories</a>
         <a href="/pricing" class="<%= path === '/pricing' ? 'active' : '' %>">Membership</a>
         <a href="/safety" class="<%= path === '/safety' ? 'active' : '' %>">Safety</a>
         <% if (currentUser) { %>

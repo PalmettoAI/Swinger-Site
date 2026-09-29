@@ -18,20 +18,34 @@ function markdownToHtml(text) {
     .replace(/^/, '<p>').replace(/$/, '</p>');
 }
 
+const CATEGORIES = ['Beginner', 'Couples', 'Explicit'];
+
 router.get('/', async (req, res) => {
+  const cat = req.query.category;
+  const activeCategory = CATEGORIES.includes(cat) ? cat : null;
   try {
     const result = await db.query(
       `SELECT id, title, slug, category, excerpt, published_at
        FROM stories WHERE published_at <= now()
-       ORDER BY published_at DESC`
+       ${activeCategory ? 'AND category = $1' : ''}
+       ORDER BY published_at DESC`,
+      activeCategory ? [activeCategory] : []
     );
     res.render('stories/index', {
-      title: 'Stories — Velvet',
+      title: activeCategory ? `${activeCategory} Stories — Swing Velvet` : 'Stories — Swing Velvet',
       bodyClass: 'stories-page',
       stories: result.rows,
+      activeCategory,
+      categories: CATEGORIES,
     });
   } catch (e) {
-    res.render('stories/index', { title: 'Stories — Velvet', bodyClass: 'stories-page', stories: [] });
+    res.render('stories/index', {
+      title: 'Stories — Swing Velvet',
+      bodyClass: 'stories-page',
+      stories: [],
+      activeCategory: null,
+      categories: CATEGORIES,
+    });
   }
 });
 

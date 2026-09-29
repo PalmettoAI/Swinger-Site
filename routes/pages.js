@@ -31,6 +31,7 @@ router.get('/', async (req, res) => {
     title: `${config.brand.name} — ${config.brand.tagline}`,
     layout: 'layout',
     bodyClass: 'landing',
+    robots: 'index, follow',
     stats,
     foundingSpots,
     foundingMonths: config.founding.goldMonths,
@@ -60,13 +61,13 @@ router.post('/enter', (req, res) => {
 
 // ── Static content pages ─────────────────────────────────────────────
 router.get('/about', (req, res) =>
-  res.render('about', { title: 'About', bodyClass: 'page-narrow' })
+  res.render('about', { title: 'About', bodyClass: 'page-narrow', robots: 'index, follow' })
 );
 router.get('/safety', (req, res) =>
-  res.render('safety', { title: 'Safety & Consent', bodyClass: 'page-narrow' })
+  res.render('safety', { title: 'Safety & Consent', bodyClass: 'page-narrow', robots: 'index, follow' })
 );
 router.get('/pricing', (req, res) =>
-  res.render('pricing-public', { title: 'Membership', bodyClass: 'page-narrow' })
+  res.render('pricing-public', { title: 'Membership', bodyClass: 'page-narrow', robots: 'index, follow' })
 );
 
 // ── Contact ──────────────────────────────────────────────────────────
@@ -109,6 +110,71 @@ router.get('/privacy', (req, res) =>
 router.get('/guidelines', (req, res) =>
   res.render('legal/guidelines', { title: 'Community Guidelines', bodyClass: 'page-narrow legal' })
 );
+
+// ── Sitemap ──────────────────────────────────────────────────────────
+router.get('/sitemap.xml', async (req, res) => {
+  const base = config.brand.siteUrl.replace(/\/$/, '');
+  const staticPages = [
+    { loc: '/', priority: '1.0', changefreq: 'weekly' },
+    { loc: '/about', priority: '0.8', changefreq: 'monthly' },
+    { loc: '/pricing', priority: '0.8', changefreq: 'monthly' },
+    { loc: '/safety', priority: '0.6', changefreq: 'monthly' },
+    { loc: '/stories', priority: '0.7', changefreq: 'daily' },
+    { loc: '/guidelines', priority: '0.5', changefreq: 'monthly' },
+  ];
+
+  let storyUrls = [];
+  try {
+    if (config.db.url) {
+      const { rows } = await db.query(
+        `SELECT slug, published_at FROM stories WHERE is_published = true ORDER BY published_at DESC LIMIT 200`
+      );
+      storyUrls = rows.map(r => ({
+        loc: `/stories/${r.slug}`,
+        priority: '0.6',
+        changefreq: 'yearly',
+        lastmod: r.published_at ? new Date(r.published_at).toISOString().split('T')[0] : null,
+      }));
+    }
+  } catch (_) {}
+
+  const today = new Date().toISOString().split('T')[0];
+  const allUrls = [...staticPages, ...storyUrls];
+
+  res.setHeader('Content-Type', 'application/xml');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${allUrls.map(u => `  <url>
+    <loc>${base}${u.loc}</loc>
+    <lastmod>${u.lastmod || today}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`).join('\n')}
+</urlset>`);
+});
+
+// ── Google Search Console verification ──────────────────────────────
+router.get('/googleb6fe53bf01fd2643.html', (req, res) => {
+  res.setHeader('Content-Type', 'text/html');
+  res.send('google-site-verification: googleb6fe53bf01fd2643.html');
+});
+
+// ── robots.txt ───────────────────────────────────────────────────────
+router.get('/robots.txt', (req, res) => {
+  const base = config.brand.siteUrl.replace(/\/$/, '');
+  res.setHeader('Content-Type', 'text/plain');
+  res.send(`User-agent: *
+Disallow: /browse
+Disallow: /profile
+Disallow: /messages
+Disallow: /matches
+Disallow: /onboarding
+Disallow: /admin
+Allow: /
+
+Sitemap: ${base}/sitemap.xml
+`);
+});
 
 // ── Health check (Railway) ───────────────────────────────────────────
 router.get('/healthz', async (req, res) => {

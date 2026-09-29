@@ -604,6 +604,56 @@ select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmln
 }
 
 /* ============================================================
+   Stories
+   ============================================================ */
+.stories-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.story-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: border-color .2s, transform .2s;
+}
+
+.story-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+
+.story-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-1);
+}
+
+.story-date { line-height: 1; }
+
+.story-title {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.15;
+  margin: 0 0 var(--sp-2);
+}
+
+.story-card p { margin: 0 0 var(--sp-3); }
+
+.story-read-more {
+  display: inline-block;
+  color: var(--gold);
+  font-size: .8rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: auto;
+}
+
+/* ============================================================
    Responsive
    ============================================================ */
 @media (max-width: 900px) {

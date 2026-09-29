@@ -5,7 +5,7 @@
  * the platform can be white-labeled or re-pointed without hunting through code.
  */
 
-const BRAND = process.env.BRAND_NAME || 'Velvet';
+const BRAND = process.env.BRAND_NAME || 'Swing Velvet';
 
 module.exports = {
   env: process.env.NODE_ENV || 'development',
@@ -14,10 +14,12 @@ module.exports = {
 
   brand: {
     name: BRAND,
+    seal: process.env.BRAND_SEAL || 'SV',
     tagline: process.env.BRAND_TAGLINE || 'The lifestyle, elevated.',
-    supportEmail: process.env.SUPPORT_EMAIL || 'support@velvet.example',
-    // Used in <title>, schema, emails
+    supportEmail: process.env.SUPPORT_EMAIL || 'support@swingvelvet.com',
     legalName: process.env.LEGAL_NAME || `${BRAND} Social LLC`,
+    gscVerification: process.env.GSC_VERIFICATION || '',
+    siteUrl: process.env.SITE_URL || 'https://swingvelvet.com',
   },
 
   session: {
@@ -101,4 +103,6 @@ module.exports = {
     goldMonths: parseInt(process.env.FOUNDING_GOLD_MONTHS || '3', 10),
     enabled: String(process.env.FOUNDING_ENABLED || 'true') === 'true',
   },
+
+  internalApiKey: process.env.INTERNAL_API_KEY || '',
 };

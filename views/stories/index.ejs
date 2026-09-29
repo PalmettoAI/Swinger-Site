@@ -6,8 +6,15 @@
       <p class="page-lead muted">Real stories. Curious couples. The lifestyle, honestly told.</p>
     </div>
 
+    <nav class="tabs mb-5">
+      <a href="/stories" class="<%= !activeCategory ? 'active' : '' %>">All</a>
+      <% categories.forEach(cat => { %>
+      <a href="/stories?category=<%= cat %>" class="<%= activeCategory === cat ? 'active' : '' %>"><%= cat %></a>
+      <% }) %>
+    </nav>
+
     <% if (stories.length === 0) { %>
-    <p class="center muted">No stories yet — check back soon.</p>
+    <p class="center muted">No <%= activeCategory ? activeCategory.toLowerCase() : '' %> stories yet — check back soon.</p>
     <% } else { %>
     <div class="stories-grid">
       <% stories.forEach(story => { %>

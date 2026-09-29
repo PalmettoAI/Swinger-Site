@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><%= title %></title>
   <meta name="description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : brand.tagline %>" />
-  <meta name="robots" content="noindex, nofollow" />
+  <meta name="robots" content="<%= typeof robots !== 'undefined' ? robots : 'noindex, nofollow' %>" />
+  <% if (brand.gscVerification) { %><meta name="google-site-verification" content="<%= brand.gscVerification %>" /><% } %>
   <meta property="og:title" content="<%= title %>" />
   <meta property="og:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : brand.tagline %>" />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="<%= brand.siteUrl %>" />
   <meta name="theme-color" content="#100b0f" />
   <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/static/css/app.css" />
